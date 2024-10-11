@@ -3,8 +3,15 @@
 ##     setcap 'cap_net_bind_service=+ep' /usr/local/bin/endlessh
 ## 2) uncomment following line
 #AmbientCapabilities=CAP_NET_BIND_SERVICE
-## 3) comment following line
+## 3) comment following line or set to false
 PrivateUsers=true
+InaccessiblePaths=/run /app by InaccessiblePaths=
+PrivateUsers=true by PrivateUsers=false
+
+run
+setcap 'cap_net_bind_service=+ep' `which endlessh` 
+run
+sudo systemctl daemon-reload && sudo systemctl restart endlessh.service
 
 
 Well it blatantly tells us what do do right here. Edit the service with sudo nano /etc/systemd/system/endlessh.service. Uncomment the AmbientCapabilities line. Comment out the PrivateUsers line, save the file, and run setcap 'cap_net_bind_service=+ep' /usr/local/bin/endlessh. Now we can set Port 22 in the sudo nano /etc/endlessh/config. Then restart the service sudo systemctl daemon-reload && sudo systemctl restart endlessh.service. Now when checking the status with sudo systemctl status endlessh.service it shows its running fine.
